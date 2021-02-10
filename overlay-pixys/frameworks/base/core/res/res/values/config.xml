@@ -70,4 +70,7 @@
          1: Right side -->
     <integer name="config_alertSliderLocation">1</integer>
 
+    <!-- FOD icon dim-->
+    <bool name="config_targetUsesInKernelDimming">true</bool>
+
 </resources>
