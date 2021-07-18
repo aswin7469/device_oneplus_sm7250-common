@@ -1,0 +1,3 @@
+on property:ro.boot.product.hardware.sku=9
+    setprop persist.radio.multisim.config ssss
+    setprop persist.vendor.radio.uicc_se_enabled true
