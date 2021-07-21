@@ -486,6 +486,51 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     vendor/qcom/opensource/vibrator/excluded-input-devices.xml:$(TARGET_COPY_OUT_VENDOR)/etc/excluded-input-devices.xml
 
+# Kernel
+PRODUCT_COPY_FILES += \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_adsp_loader.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_adsp_loader.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_apr.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_apr.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_bolero_cdc.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_bolero_cdc.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_hdmi.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_hdmi.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_machine_lito.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_machine_lito.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_mbhc.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_mbhc.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_native.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_native.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_pinctrl_lpi.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_pinctrl_lpi.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_platform.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_platform.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_q6.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_q6.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_q6_notifier.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_q6_notifier.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_q6_pdr.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_q6_pdr.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_rx_macro.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_rx_macro.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_snd_event.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_snd_event.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_stub.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_stub.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_swr_ctrl.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_swr_ctrl.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_swr.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_swr.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_tfa9894.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_tfa9894.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_tx_macro.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_tx_macro.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_usf.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_usf.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_va_macro.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_va_macro.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wcd937x.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wcd937x.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wcd937x_slave.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wcd937x_slave.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wcd938x.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wcd938x.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wcd938x_slave.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wcd938x_slave.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wcd9xxx.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wcd9xxx.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wcd_core.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wcd_core.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wsa881x.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wsa881x.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wsa883x.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wsa883x.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/audio_wsa_macro.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/audio_wsa_macro.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/lcd.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/lcd.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/llcc_perfmon.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/llcc_perfmon.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/modules.alias:$(TARGET_COPY_OUT_VENDOR)/lib/modules/modules.alias \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/modules.dep:$(TARGET_COPY_OUT_VENDOR)/lib/modules/modules.dep \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/modules.load:$(TARGET_COPY_OUT_VENDOR)/lib/modules/modules.load \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/modules.softdep:$(TARGET_COPY_OUT_VENDOR)/lib/modules/modules.softdep \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/mpq-adapter.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/mpq-adapter.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/mpq-dmx-hw-plugin.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/mpq-dmx-hw-plugin.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/qca_cld3_wlan.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/qca_cld3_wlan.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/rdbg.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/rdbg.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/rmnet_perf.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/rmnet_perf.ko \
+    $(LOCAL_PATH)/prebuilt/kernel_modules/rmnet_shs.ko:$(TARGET_COPY_OUT_VENDOR)/lib/modules/rmnet_shs.ko \
+
 # Seccomp policy
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/seccomp/mediacodec.policy:$(TARGET_COPY_OUT_VENDOR)/etc/seccomp_policy/mediacodec.policy
