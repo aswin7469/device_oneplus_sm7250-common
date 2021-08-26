@@ -1,0 +1,13 @@
+[
+  {
+    "repository"  : "kernel_oneplus_sm7250",
+    "target_path" : "kernel/oneplus/sm7250",
+    "branch"      : "eleven"
+  },
+  {
+    "repository"  : "vendor_oneplus_sm7250-common",
+    "target_path" : "vendor/oneplus/sm7250-common",
+    "branch"      : "eleven",
+    "remote"      : "pixys-devices-gitlab"
+  }
+]
