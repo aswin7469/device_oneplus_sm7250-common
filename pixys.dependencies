@@ -36,5 +36,11 @@
     "target_path": "vendor/oneplus/avicii-camera",
     "branch": "eleven",
     "remote": "pixys-gitlab"
+  },
+  {
+    "repository": "KakatkarAkshay/packages_apps_GoogleCamera",
+    "target_path": "packages/apps/GoogleCamera",
+    "branch": "eleven",
+    "remote": "gitlab"
   }
 ]
