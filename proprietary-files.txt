@@ -860,7 +860,7 @@ vendor/lib64/unnhal-acc-hta.so
 vendor/lib64/unnhal-acc-hvx.so
 
 # NFC
--system_ext/app/NxpNfcNci/NxpNfcNci.apk
+-system_ext/app/NxpNfcNci/NxpNfcNci.apk|bb31e81c8c9777b88000d735173f07941f62fb2c93d2153317bf12cec93a6130
 system/etc/nfcee_access.xml
 system_ext/etc/permissions/com.nxp.nfc.xml
 system_ext/framework/com.nxp.nfc.jar
