@@ -51,10 +51,7 @@ if [ "$(getprop persist.vendor.usb.config)" == "" -a "$(getprop ro.build.type)" 
 	"$(getprop init.svc.vendor.usb-gadget-hal-1-0)" != "running" ]; then
     if [ "$esoc_name" != "" ]; then
 	  setprop persist.vendor.usb.config diag,diag_mdm,qdss,qdss_mdm,serial_cdev,dpl,rmnet,adb
-	  #BSP add for 5G diag port config
-	  setprop persist.vendor.sdx50m.online 1
     else
-	  setprop persist.vendor.sdx50m.online 0
 	  case "$(getprop ro.baseband)" in
 	      "apq")
 	          setprop persist.vendor.usb.config diag,adb
@@ -105,7 +102,7 @@ if [ "$(getprop persist.vendor.usb.config)" == "" -a "$(getprop ro.build.type)" 
 		          setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,adb
 		      ;;
 	              "msmnile" | "sm6150" | "trinket" | "lito" | "atoll" | "bengal" | "lahaina" | "holi")
-			  setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,qdss,adb
+			  setprop persist.vendor.usb.config diag,adb
 		      ;;
 	              *)
 		          setprop persist.vendor.usb.config diag,adb
@@ -238,7 +235,6 @@ if [ -d /config/usb_gadget/g1/functions/uvc.0 ]; then
 	ln -s streaming/header/h streaming/class/hs/
 	ln -s streaming/header/h streaming/class/ss/
 fi
-
 #ifdef VENDOR_EDIT
 #Enable diag and adb for FTM
 boot_mode=`getprop ro.boot.ftm_mode`
@@ -250,10 +246,3 @@ case "$boot_mode" in
     echo "AFTER boot_mode: diag,adb" > /dev/kmsg
 esac
 #endif
-
-boot_mode=`getprop ro.vendor.factory_mode`
-if [ "$boot_mode" == "1" ]; then
-    echo "boot_mode: factory_mode" > /dev/kmsg
-    setprop persist.vendor.usb.config diag,adb
-    echo "AFTER boot_mode: diag,adb" > /dev/kmsg
-fi

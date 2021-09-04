@@ -83,8 +83,3 @@ service vendor.light-hal-2-0 /vendor/bin/hw/xxx
     oneshot
     disabled
 
-service vendor.imsdaemon /vendor/bin/imsdaemon
-    class main
-    user radio
-    group radio wifi inet vendor_qti_diag log
-    disabled

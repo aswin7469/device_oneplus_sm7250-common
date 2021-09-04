@@ -50,6 +50,7 @@ on charger
     setprop sys.usb.configfs 1
     start dashd
 
+
 on charger && property:ro.boot.type=debug
     write /dev/kmsg "debug version, ready to trigger post-fs-data"
 # kartar@SYSTEM, 2020/05/08, IKR-260 Enable adb early in charger mode
@@ -95,19 +96,7 @@ on charger && property:ro.boot.type=auto
     symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}
 
-on init && property:ro.boot.project_name=19811
-    setprop vendor.wireless_charge.enable true
-
-on boot && property:vendor.wireless_charge.enable=true
-    start wlchgd
-
-on charger && property:vendor.wireless_charge.enable=true
-    start wlchgd
-
-on init && property:ro.build.type=userdebug
-    exec u:r:vendor-qti-testscripts:s0 -- /vendor/bin/sh /vendor/bin/init.qti.usb.debug.sh
-
-on init && property:ro.build.type=eng
+on init
     exec u:r:vendor-qti-testscripts:s0 -- /vendor/bin/sh /vendor/bin/init.qti.usb.debug.sh
 
 on boot
@@ -180,11 +169,6 @@ on boot
     write /config/usb_gadget/g2/strings/0x409/product ${vendor.usb.product_string}
     #setprop sys.usb.config ${persist.vendor.usb.config}
     setprop sys.usb.configfs 1
-    trigger set_serialnumber
-
-on set_serialnumber && property:ro.vendor.factory_mode=1
-    write /config/usb_gadget/g1/strings/0x409/serialnumber "0123456789ABCDEF"
-    write /config/usb_gadget/g2/strings/0x409/serialnumber "0123456789ABCDEF"
 
 on boot && property:vendor.usb.use_ffs_mtp=1
    mkdir /config/usb_gadget/g1/functions/ffs.mtp
@@ -194,12 +178,8 @@ on boot && property:vendor.usb.use_ffs_mtp=1
    mkdir /dev/usb-ffs/ptp 0770 mtp mtp
    mount functionfs ptp /dev/usb-ffs/ptp rmode=0770,fmode=0660,uid=1024,gid=1024,no_disconnect=1
 
-on property:persist.vendor.usb.config=* && property:ro.vendor.factory_mode=1
-    setprop persist.sys.usb.config ${persist.vendor.usb.config}
-
-#BSP add for 5G diag port
-on property:persist.vendor.sdx50m.online=*
-    setprop persist.sys.sdx50m.online ${persist.vendor.sdx50m.online}
+#on property:persist.vendor.usb.config=*
+#    setprop persist.sys.usb.config ${persist.vendor.usb.config}
 
 on boot && property:ro.boot.usbconfigfs=true
         setprop sys.usb.configfs 1
@@ -279,11 +259,13 @@ on property:sys.usb.ffs.ready=1 && property:sys.usb.config=diag,adb && property:
     rm /config/usb_gadget/g1/configs/b.1/f8
     rm /config/usb_gadget/g1/configs/b.1/f9
     write /config/usb_gadget/g1/idVendor 0x05C6
-    write /config/usb_gadget/g1/idProduct 0x676C
+    write /config/usb_gadget/g1/idProduct 0x676c  #VENDOR_EDIT ori=0x901D
+    write /config/usb_gadget/g1/functions/diag.diag/pid 0x676c
     symlink /config/usb_gadget/g1/functions/${vendor.usb.diag.func.name}.diag /config/usb_gadget/g1/configs/b.1/f1
     symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f2
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}
     setprop sys.usb.state ${sys.usb.config}
+
 
 on property:sys.usb.config=diag && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "diag"
@@ -523,9 +505,8 @@ on property:sys.usb.config=rndis,serial_cdev,diag && property:sys.usb.configfs=1
     symlink /config/usb_gadget/g1/functions/${vendor.usb.rndis.func.name}.rndis /config/usb_gadget/g1/configs/b.1/f1
     symlink /config/usb_gadget/g1/functions/cser.dun.0 /config/usb_gadget/g1/configs/b.1/f2
     symlink /config/usb_gadget/g1/functions/${vendor.usb.diag.func.name}.diag /config/usb_gadget/g1/configs/b.1/f3
-    symlink /config/usb_gadget/g1/functions/${vendor.usb.diag.func.name}.diag_mdm /config/usb_gadget/g1/configs/b.1/f4
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config} #2018.05.28 modify for CTA/EngineerMode RNDIS test
+    setprop sys.usb.state ${sys.usb.config} # modify for CTA/EngineerMode RNDIS test
 
 on property:sys.usb.config=rndis,serial_cdev,diag,adb && property:sys.usb.configfs=1
     start adbd
@@ -546,10 +527,9 @@ on property:sys.usb.ffs.ready=1 && property:sys.usb.config=rndis,serial_cdev,dia
     symlink /config/usb_gadget/g1/functions/${vendor.usb.rndis.func.name}.rndis /config/usb_gadget/g1/configs/b.1/f1
     symlink /config/usb_gadget/g1/functions/cser.dun.0 /config/usb_gadget/g1/configs/b.1/f2
     symlink /config/usb_gadget/g1/functions/${vendor.usb.diag.func.name}.diag /config/usb_gadget/g1/configs/b.1/f3
-    symlink /config/usb_gadget/g1/functions/${vendor.usb.diag.func.name}.diag_mdm /config/usb_gadget/g1/configs/b.1/f4
-    symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f5
+    symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f4
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config} #2018.02.12 modify for CTA RNDIS test
+    setprop sys.usb.state ${sys.usb.config} # modify for CTA RNDIS test
 
 on property:sys.usb.config=mtp,diag && property:vendor.usb.use_ffs_mtp=0 && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "mtp_diag"
@@ -736,7 +716,7 @@ on property:sys.usb.config=rndis,diag,qdss && property:sys.usb.configfs=1
     symlink /config/usb_gadget/g1/functions/${vendor.usb.diag.func.name}.diag /config/usb_gadget/g1/configs/b.1/f2
     symlink /config/usb_gadget/g1/functions/qdss.${vendor.usb.qdss.inst.name} /config/usb_gadget/g1/configs/b.1/f3
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state rndis
+    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=rndis,diag,qdss,adb && property:sys.usb.configfs=1
     start adbd
@@ -760,7 +740,7 @@ on property:sys.usb.ffs.ready=1 && property:sys.usb.config=rndis,diag,qdss,adb &
     symlink /config/usb_gadget/g1/functions/qdss.${vendor.usb.qdss.inst.name} /config/usb_gadget/g1/configs/b.1/f3
     symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f4
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state rndis,adb
+    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=ncm && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "ncm"
