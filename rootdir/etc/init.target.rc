@@ -26,14 +26,11 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 #
-# kevin@system, 2020/09/03, add carrier rc
-import /vendor/etc/init/hw/init.oem.carrier.rc
 
 on early-init
-    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules audio_q6_pdr audio_q6_notifier audio_snd_event audio_apr audio_adsp_loader audio_q6 audio_native audio_usf audio_pinctrl_lpi audio_swr audio_platform audio_hdmi audio_stub audio_wcd_core audio_wsa881x audio_wsa883x audio_bolero_cdc audio_wsa_macro audio_va_macro audio_rx_macro audio_tx_macro audio_wcd938x audio_wcd938x_slave audio_wcd937x audio_wcd937x_slave audio_machine_lito
+    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules audio_q6_pdr audio_q6_notifier audio_snd_event audio_apr audio_adsp_loader audio_q6 audio_native audio_usf audio_pinctrl_lpi audio_swr audio_platform audio_hdmi audio_stub audio_wcd_core audio_wsa881x audio_wsa883x audio_bolero_cdc audio_wsa_macro audio_va_macro audio_rx_macro audio_tx_macro audio_tfa9894 audio_wcd938x audio_wcd938x_slave audio_wcd937x audio_wcd937x_slave audio_machine_lito
     write /proc/sys/kernel/sched_boost 1
-on early-init
-    exec u:r:vendor_modprobe:s0 -- /vendor/bin/modprobe -a -d /vendor/lib/modules  audio_tfa9894
+
 on init
     write /dev/stune/foreground/schedtune.sched_boost_no_override 1
     write /dev/stune/top-app/schedtune.sched_boost_no_override 1
@@ -53,9 +50,8 @@ on early-fs
 
 on fs
     start hwservicemanager
-    #RuiLi@ODM_WT.ENGINEERINGMODE, 2021/01/27 *#911# can't creat file in op2
-    mkdir /mnt/vendor/op2 0660 system system
     mount_all --early
+#ifdef VENDOR_EDIT
 # ajinath@SYSTEM, 2020/01/16, [OSP-2080] Recovery boot reason
     wait /mnt/vendor/op2
     chown system system /mnt/vendor/op2
@@ -65,16 +61,10 @@ on fs
     chmod 0771 /mnt/vendor/persist
     restorecon_recursive /mnt/vendor/persist
     mkdir /mnt/vendor/persist/data 0700 system system
-    #RuiLi@ODM_WT.ENGINEERINGMODE, 2021/01/27 *#911# can't creat file in op2
-    wait /mnt/vendor/op2
-    chown system system /mnt/vendor/op2
-    #sam.li@SYSTEM,add for cota
-    mkdir /mnt/vendor/my_cota 0660 system system
 
 on post-fs
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
-# yanbin.zhang@ODM_WT.AD.Aging 2020/12/21, add for engineeringmode app.
     mkdir /mnt/vendor/op2/recovery 0770 root system
 
 on late-fs
@@ -105,8 +95,37 @@ on boot
     setprop vendor.usb.dpl.inst.name "dpl"
     setprop vendor.usb.qdss.inst.name "qdss_mdm"
     setprop vendor.usb.controller a600000.dwc3
-#Load WLAN driver
     insmod /vendor/lib/modules/qca_cld3_wlan.ko
+
+# ashu.sharma@Multimedia, Add permissions to sysfs nodes
+    chmod 0666 /sys/class/drm/card0-DSI-1/SRGB
+    chmod 0666 /sys/class/drm/card0-DSI-1/DCI_P3
+    chmod 0666 /sys/class/drm/card0-DSI-1/hbm
+    chmod 0666 /sys/class/drm/card0-DSI-1/aod
+    chmod 0666 /sys/class/drm/card0-DSI-1/night_mode
+    chmod 0666 /sys/class/drm/card0-DSI-1/panel_serial_number
+    chmod 0666 /sys/class/drm/card0-DSI-1/oneplus_mode
+    chmod 0666 /sys/class/drm/card0-DSI-1/adaption_mode
+    chmod 0666 /sys/class/drm/card0-DSI-1/notify_fppress
+    chmod 0666 /sys/class/drm/card0-DSI-1/dim_alpha
+    chmod 0666 /sys/class/drm/card0-DSI-1/notify_dim
+    chmod 0666 /sys/class/drm/card0-DSI-1/notify_aod
+    chmod 0666 /sys/class/drm/card0-DSI-1/force_screenfp
+    chmod 0666 /sys/class/drm/card0-DSI-1/native_display_p3_mode
+    chmod 0666 /sys/class/drm/card0-DSI-1/native_display_wide_color_mode
+    chmod 0666 /sys/class/drm/card0-DSI-1/native_display_srgb_color_mode
+# ashu.sharma@Multimedia, Give system permission to hbm_brightness
+    chown system system /sys/class/drm/card0-DSI-1/hbm_brightness
+    chmod 0644 /sys/class/drm/card0-DSI-1/hbm_brightness
+    chmod 0666 /sys/class/drm/card0-DSI-1/dsi_seed_command
+    chmod 0666 /sys/devices/platform/soc/soc:qcom,dsi-display-primary/dynamic_dsi_clock
+    chown radio radio /sys/devices/platform/soc/soc:qcom,dsi-display-primary/dynamic_dsi_clock
+    chown radio radio /proc/force_reset
+    chmod 0666 /sys/class/drm/card0-DSI-1/native_display_loading_effect_mode
+    chmod 0666 /sys/class/drm/card0-DSI-1/native_display_customer_srgb_mode
+    chmod 0666 /sys/class/drm/card0-DSI-1/native_display_customer_p3_mode
+    chmod 0666 /sys/class/drm/card0-DSI-1/dimlayer_bl_en
+    chmod 0666 /sys/class/drm/card0-DSI-1/seed_lp
 
 on property:vendor.display.lcd_density=560
    setprop dalvik.vm.heapgrowthlimit 256m
@@ -124,6 +143,7 @@ on charger
     start vendor.power_off_alarm
     setprop vendor.usb.controller a600000.dwc3
     setprop sys.usb.configfs 1
+    start hvdcp_opti
 
 #pd-mapper
 service vendor.pd_mapper /vendor/bin/pd-mapper
@@ -153,19 +173,30 @@ service vendor.mdm_launcher /vendor/bin/sh /vendor/bin/init.mdm.sh
     class core
     oneshot
 
+#QG soc
+service hvdcp_opti /system/vendor/bin/hvdcp_opti
+    class main
+    user root
+    group system wakelock
+
 on property:init.svc.vendor.per_mgr=running
     start vendor.per_proxy
 
 on property:sys.shutdown.requested=*
     stop vendor.per_proxy
 
-on property:vold.decrypt=trigger_restart_framework
-   start vendor.cnss_diag
+# v-krishna.rao@Connectivity 2020/09/16, dont let cnss_diag auto start
+#ifdef/* VENDOR_EDIT */
+#on property:vold.decrypt=trigger_restart_framework
+#   start vendor.cnss_diag
+#endif /* VENDOR_EDIT */
 
 service vendor.cnss_diag /system/vendor/bin/cnss_diag -q -f -t HELIUM
    class main
    user system
    group system wifi inet sdcard_rw media_rw diag
+   # v-krishna.rao@Connectivity porting, 2020/09/08, disable auto start on boot
+   disabled
    oneshot
 
 service dcvs-sh /vendor/bin/init.qti.dcvs.sh
@@ -177,3 +208,9 @@ service dcvs-sh /vendor/bin/init.qti.dcvs.sh
 
 on property:vendor.dcvs.prop=1
    start dcvs-sh
+
+#ashu.sharma@MM.Display, Add ltm license
+on property:sys.boot_completed=1
+    copy /vendor/etc/OnePlus_QC_LTM_Commercial_SM7250_2020_04_26.pfm /mnt/vendor/persist/data/pfm/licenses/1000-1000-no-exp-220910215.pfm
+    chmod 0600 /mnt/vendor/persist/data/pfm/licenses/1000-1000-no-exp-220910215.pfm
+    chown system system /mnt/vendor/persist/data/pfm/licenses/1000-1000-no-exp-220910215.pfm

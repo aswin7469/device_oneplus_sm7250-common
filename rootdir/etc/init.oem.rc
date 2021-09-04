@@ -12,8 +12,6 @@
 #Load WLAN driver
 
 import /vendor/etc/init/hw/init.cust.rc
-#ethan.peng@Connectivity,2020/12/29,close uicc since orange
-import /vendor/etc/init/hw/init.uicc.rc
 
 on property:wlan.driver.status=ok
     start load_wlan_driver
@@ -31,6 +29,7 @@ on charger
 #@bsp, 2019/08/22 Add dash charging
 service dashd /vendor/bin/dashd
     class core
+    critical
     seclabel u:r:dashd:s0
     group root system
 
@@ -102,17 +101,6 @@ on fs
     chown system system /sys/bus/platform/devices/soc/soc\:tri_state_key/hall_data_calib
     chown system system /sys/bus/platform/devices/soc/soc\:tri_state_key/hall_set_value
 
-#add for tp firmware update
-    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-004b/tp_fw_update 0
-    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-0048/tp_fw_update 0
-    write /sys/devices/platform/soc/984000.i2c/i2c-4/4-005d/tp_fw_update 0
-    write /sys/devices/platform/soc/984000.i2c/i2c-4/4-0048/tp_fw_update 0
-    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-005d/tp_fw_update 0
-    write /sys/devices/platform/soc/880000.i2c/i2c-0/0-0038/tp_fw_update 0
-    write /sys/devices/platform/soc/880000.spi/spi_master/spi0/spi0.0/tp_fw_update 0
-#add for n200 
-    write /sys/devices/platform/soc/4a80000.spi/spi_master/spi0/spi0.0/tp_fw_update 0
-
 #add for tp debug log & to set node gesture_enable
     chown system system /proc/touchpanel/tp_debug_log
     chown system system /proc/touchpanel/gesture_enable
@@ -123,7 +111,6 @@ on fs
     chown system system /proc/touchpanel/tp_switch_corner_dead_p_zone
     chown system system /proc/touchpanel/touch_apk
     chown system system /proc/touchpanel/get_device_temperature
-    chown system system /proc/touchpanel/get_ic_firmware_version
 #   /* add for wireless charge */
     chown system system /proc/wireless/enable_tx
     chown system system /proc/wireless/enable_rx
@@ -141,7 +128,7 @@ on fs
     chmod 0666 /proc/simholder/sim_holder_detect
     chown system system /proc/simholder/sim_holder_detect
 
-
+#ifdef VENDOR_EDIT
 #uma.mahesh@Imaging 2020/4/8 add for factory item
     chown system system /sys/class/leds/led:torch_0/brightness
     chmod 666 /sys/class/leds/led:torch_0/brightness
@@ -190,21 +177,21 @@ on fs
 #add for ois debug
     chown system system /sys/kernel/ois_control/dump_registers
     chmod 666 /sys/kernel/ois_control/dump_registers
-
+#endif
 
 #   Power@bsp, 2020/2/27, add for thermal
     chown system system /dev/msm_thermal
     chown system system /dev/skin_thermal
-    chown system system /dev/modem_skin_therm
-    chown system system /dev/mmw0_therm
-    chown system system /dev/mmw1_therm
-    chown system system /dev/mmw2_therm
+    chown system system /dev/modem_skin_thermal
+    chown system system /dev/mmw0_thermal
+    chown system system /dev/mmw1_thermal
+    chown system system /dev/mmw2_thermal
     chmod 0664 /dev/msm_thermal
     chmod 0664 /dev/skin_thermal
-    chmod 0664 /dev/modem_skin_therm
-    chmod 0664 /dev/mmw0_therm
-    chmod 0664 /dev/mmw1_therm
-    chmod 0664 /dev/mmw2_therm
+    chmod 0664 /dev/modem_skin_thermal
+    chmod 0664 /dev/mmw0_thermal
+    chmod 0664 /dev/mmw1_thermal
+    chmod 0664 /dev/mmw2_thermal
 
 #ifdef VENDOR_EDIT
 #if OP_FEATURE_MM_ADSP_MINIDUMP == 1
@@ -224,8 +211,6 @@ on fs
 	chmod 0666 /sys/class/drm/card0-DSI-1/aod
 	chmod 0666 /sys/class/drm/card0-DSI-1/night_mode
 	chmod 0666 /sys/class/drm/card0-DSI-1/panel_serial_number
-	chmod 0666 /sys/class/drm/card0-DSI-1/cabc
-	chmod 0666 /sys/class/drm/card0-DSI-1/oplus_shutdownflag
 	chmod 0666 /sys/class/drm/card0-DSI-1/oneplus_mode
 	chmod 0666 /sys/class/drm/card0-DSI-1/adaption_mode
 	chmod 0666 /sys/class/drm/card0-DSI-1/notify_fppress
@@ -243,16 +228,19 @@ on fs
 	chmod 0666 /sys/class/drm/card0-DSI-1/native_display_customer_p3_mode
 	chmod 0666 /sys/class/drm/card0-DSI-1/dimlayer_bl_en
 	chmod 0666 /sys/class/drm/card0-DSI-1/dither_en
-	chmod 0666 /sys/class/drm/card0-DSI-1/oplus_msd_aod
-
-	chmod 0666 /sys/class/drm/card0-DSI-1/osc_mode
-	chown radio radio /sys/class/drm/card0-DSI-1/osc_mode
 
 #   ken.lin@ASTI, 2019/6/21, add for fsc
     chown system system /sys/module/fsc/parameters/enable
     chmod 0664 /sys/module/fsc/parameters/enable
 
+#add for tp update when boot
 on boot
+    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-004b/tp_fw_update 0
+    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-0048/tp_fw_update 0
+    write /sys/devices/platform/soc/984000.i2c/i2c-4/4-005d/tp_fw_update 0
+    write /sys/devices/platform/soc/984000.i2c/i2c-4/4-0048/tp_fw_update 0
+    write /sys/devices/platform/soc/a94000.i2c/i2c-4/4-005d/tp_fw_update 0
+    write /sys/devices/platform/soc/880000.spi/spi_master/spi0/spi0.0/tp_fw_update 0
 #ifdef VENDOR_EDIT
     chmod 0666 /dev/goodix_fp
     chmod 0660 /sys/devices/platform/soc/soc:fingerprint_detect/sensor_version
@@ -262,15 +250,6 @@ on boot
     chmod 0664 sys/devices/platform/soc/soc:goodix_fp/screen_state
     chown system system sys/devices/platform/soc/soc:goodix_fp/screen_state
     chmod 0666 /dev/qseecom
-
-    # access permission for egis
-    chown system system /dev/esfp0
-    chmod 0666 /dev/esfp0
-    # access permission for egis navigation
-    chmod 0666 /sys/devices/platform/egis_input/navigation_event
-    chmod 0666 /sys/devices/platform/egis_input/navigation_enable
-    chown system system /sys/devices/platform/egis_input/navigation_event
-    chown system system /sys/devices/platform/egis_input/navigation_enable
 #endif
     setprop ro.nfc.port "I2C"
     chmod 0666 /dev/pn553
@@ -279,9 +258,12 @@ on boot
     chown secure_element secure_element /dev/p73
 #Leo@BSP 2020/04/17 add for qsee_log tz_log
     chmod 0666 /proc/tzdbg/qsee_log
-    chmod 0666 /proc/tzdbg/log
+    chmod 0666 /proc/tzdbg/tz_log
 #Norman@Connectivity 2020/04/24 add for default country code
     setprop ro.boot.wificountrycode 00
+
+#Brandon@Conn 2020/07/24 add for default uicc support
+    setprop persist.vendor.radio.uicc_se_enabled true
 
 #martin.li@BSP, 2019/12/03,support for EngineeringMode tool start
    chown system system /proc/rf_cable_config
@@ -290,19 +272,6 @@ on boot
 #ifdef VENDOR_EDIT
 #Set TCP MTU probing to automatic
    write /proc/sys/net/ipv4/tcp_mtu_probing 1
-#endif /*VENDOR_EDIT*/
-
-#ifdef VENDOR_EDIT
-#tempest.chen@BSP 2020/12/07 add for light sensor and ultrasound proximity
-    chmod 666 /dev/input/event1
-    chmod 666 /dev/input/event2
-    chmod 666 /dev/input/event8
-    chmod 666 /dev/input/event10
-#endif /*VENDOR_EDIT*/
-
-#ifdef VENDOR_EDIT
-#niku.huang@SYSTEM, 2020/12/30, Add for enable round corner
-    setprop vendor.display.disable_rounded_corner 0
 #endif /*VENDOR_EDIT*/
 
 on init
@@ -384,11 +353,6 @@ on post-fs
     chmod 660 /sys/class/power_supply/battery/op_disable_charge
     chown system system /sys/class/power_supply/bms/battery_h
     chmod 660 /sys/class/power_supply/bms/battery_h
-#brian@BSP, 2021/3/4, add for [IKR-43692] charging optimizated
-    chown system system /sys/class/power_supply/bms/full_available_capacity
-    chmod 660 /sys/class/power_supply/bms/full_available_capacity
-    chown system system /sys/class/power_supply/bms/full_charge_capacity_filtered
-    chmod 660 /sys/class/power_supply/bms/full_charge_capacity_filtered
 #endif
 #ifdef VENDOR_EDIT
 #randle.liu@optimization, 2020/04/24, [OSP-6116] avoid waking up when wireless charging disconnects
@@ -482,9 +446,6 @@ on post-fs-data
     mkdir /data/vendor/ramdump/adsp 0770 system system
 # endif
 
-    # kimmy.yang@NETWORK, 20201223, add for SM8350 (SoC)
-    mkdir /data/vendor/ramdump/modem 0770 system system
-
 #ifdef VENDOR_EDIT online ISP tuning
     mkdir /data/vendor/camera_update 0777 camera camera
     write /data/vendor/camera_update/reservetuningbin0 ""
@@ -504,13 +465,6 @@ on post-fs-data
     chmod 0666 /data/vendor/camera_update/reservetuningbin6
 #endif
 
-# for battery charging off is call_state_change
-# jinguozhi@wt.network,20210207,add for battery charging off is call_state_change
-on property:persist.sys.chgdisabled=1
-   write /sys/class/power_supply/battery/call_mode 1
-on property:persist.sys.chgdisabled=0
-   write /sys/class/power_supply/battery/call_mode 0
-
 # add for SMT test enters WLAN FTM test in non-signaling
 service wififtmserver /vendor/bin/sh vendor/bin/wifi_ftm
     class late_start
@@ -523,6 +477,7 @@ service wififtmserver /vendor/bin/sh vendor/bin/wifi_ftm
 on property:vendor.post_boot.parsed=1
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/schedutil/target_loads
     chown system system /sys/devices/system/cpu/cpu4/cpufreq/schedutil/target_loads
+    chown system system /sys/devices/system/cpu/cpu6/cpufreq/schedutil/target_loads
     chown system system /sys/devices/system/cpu/cpu7/cpufreq/schedutil/target_loads
     chown system system /sys/devices/system/cpu/cpu7/core_ctl/busy_up_thres
     chown system system /sys/devices/system/cpu/cpu7/core_ctl/busy_down_thres
@@ -639,27 +594,6 @@ on property:vendor.service.wifi.socket.lahaina.enable=0
 on property:vendor.service.wifi.socket.lahaina.enable=1
     start oemsysd
 
-service wifisocket-nord /system_ext/bin/diag_system_socket_log -a 181.157.1.200 -p 2500 -r 10000 -c 1
-    user root
-    group root system oem_2901
-    disabled
-    oneshot
-    seclabel u:r:logserver:s0
-
-service wifisocket-nord-stop /system_ext/bin/diag_system_socket_log -k
-    user root
-    group root system oem_2901
-    disabled
-    oneshot
-    seclabel u:r:logserver:s0
-
-on property:vendor.service.wifi.socket.nord.enable=1
-    start oemsysd
-    start wifisocket-nord
-
-on property:vendor.service.wifi.socket.nord.enable=0
-    stop oemsysd
-    start wifisocket-nord-stop
 #endif
 
 service ftmdaemon /system/vendor/bin/ftmdaemon -n
@@ -739,7 +673,7 @@ service chownalikey /system/bin/chown -R system.system  /mnt/vendor/op2/.lii
     seclabel u:r:vold:s0
 
 #len.nie@bsp, 2020/11/04. add for dump fingerprint data
-on property:gf.debug.dump_path=*
+on property:gf.debug.dump_data=1
     mkdir /sdcard/Android/data/gf_file 0755 system ext_data_rw
 
 #endif
@@ -839,17 +773,8 @@ on property:sys.boot_completed=1
 #@bsp Add OTG switch
 on property:persist.sys.oem.otg_support=true
     write /sys/class/power_supply/usb/otg_switch 1
-    write /sys/class/oplus_chg/usb/otg_switch 1
 on property:persist.sys.oem.otg_support=false
     write /sys/class/power_supply/usb/otg_switch 0
-    write /sys/class/oplus_chg/usb/otg_switch 0
-#endif
-
-#ifdef VENDOR_EDIT
-on property:persist.vendor.oem.wechat_cameraon=1
-    write /sys/class/oplus_chg/common/camera_on 1
-on property:persist.vendor.oem.wechat_cameraon=0
-    write /sys/class/oplus_chg/common/camera_on 0
 #endif
 
 on property:vendor.sys.op.game=1
@@ -1036,16 +961,6 @@ service KmInstallKeybox20801 /vendor/bin/KmInstallKeybox /mnt/vendor/op2/.lii/ke
     disabled
     oneshot
     seclabel u:r:keybox_oem:s0
-
-# yanamadala.ragini@SYSTEM, 2020/11/30, [AN-977] Add for keymaster key
-service KmInstallKeybox20828 /vendor/bin/KmInstallKeybox /mnt/vendor/op2/.lii/keyboxes_ciphered.xml OnePlus9R_Key_Attest_0 true
-    class core
-    setenv LD_LIBRARY_PATH /vendor/lib64/hw
-    user system
-    group root
-    disabled
-    oneshot
-    seclabel u:r:keybox_oem:s0
 # endif
 
 # v-huanouyang@SYSTEM, 2020/10/22 [TFS-20170] Update Google key box for check on Lemonadev
@@ -1098,46 +1013,6 @@ service KmInstallKeyboxLemonadept /vendor/bin/KmInstallKeybox /mnt/vendor/op2/.l
     oneshot
     seclabel u:r:keybox_oem:s0
 
-# braden.liu@SYSTEM, 2021/01/05 Update Google key box for check on Dre
-service KmInstallKeyboxDre8t /vendor/bin/KmInstallKeybox /mnt/vendor/op2/.lii/keyboxes_ciphered.xml OnePlusN200TMO_Key_Attest_0 true
-    class core
-    setenv LD_LIBRARY_PATH /vendor/lib64/hw
-    user system
-    group root
-    disabled
-    oneshot
-    seclabel u:r:keybox_oem:s0
-
-# braden.liu@SYSTEM, 2021/01/05 Update Google key box for check on Dre
-service KmInstallKeyboxDre8m /vendor/bin/KmInstallKeybox /mnt/vendor/op2/.lii/keyboxes_ciphered.xml OnePlusN200METRO_Key_Attest_0 true
-    class core
-    setenv LD_LIBRARY_PATH /vendor/lib64/hw
-    user system
-    group root
-    disabled
-    oneshot
-    seclabel u:r:keybox_oem:s0
-
-# braden.liu@SYSTEM, 2021/01/05 Update Google key box for check on Dre
-service KmInstallKeyboxDre9 /vendor/bin/KmInstallKeybox /mnt/vendor/op2/.lii/keyboxes_ciphered.xml OnePlusN200_Key_Attest_0 true
-    class core
-    setenv LD_LIBRARY_PATH /vendor/lib64/hw
-    user system
-    group root
-    disabled
-    oneshot
-    seclabel u:r:keybox_oem:s0
-
-# dongbin@WT_ODM_SYSTEM, 2021/01/27 Update Google key box for check on ebba
-service KmInstallKeybox20813 /vendor/bin/KmInstallKeybox /mnt/vendor/op2/.lii/keyboxes_ciphered.xml OnePlusNordCE_Key_Attest_00 true
-    class core
-    setenv LD_LIBRARY_PATH /vendor/lib64/hw
-    user system
-    group root
-    disabled
-    oneshot
-    seclabel u:r:keybox_oem:s0
-
 service keyboxxml /system/bin/mv /sdcard/.lii /mnt/vendor/op2/
     class core
     user root
@@ -1166,16 +1041,16 @@ service chmodkeyboxxmldir /system/bin/chmod 777 -R /mnt/vendor/op2/.lii
 #alden.zhang@OPTI, 2020/7/18. [OSP-8064], add for IOLIMIT
 on property:persist.sys.iolimiter.enable=true
     write /proc/iolimit_enable 1
-    write /sys/module/oneplus_healthinfo/parameters/ohm_action_ctrl Y
-    chown system system /sys/module/oneplus_healthinfo
-    chown system system /sys/module/oneplus_healthinfo/parameters
-    chown system system /sys/module/oneplus_healthinfo/parameters/ohm_iowait_h_ms
-    chown system system /sys/module/oneplus_healthinfo/parameters/ohm_iowait_l_ms
-    chown system system /sys/module/oneplus_healthinfo/parameters/ohm_read_thresh
-    chown system system /sys/module/oneplus_healthinfo/parameters/ohm_write_thresh
-    chown system system /sys/module/oneplus_healthinfo/parameters/ohm_sample_time
-    chown system system /sys/module/oneplus_healthinfo/parameters/ohm_action_ctrl
-    chown system system /proc/iolimit_enable
+	write /sys/module/oneplus_healthinfo/parameters/ohm_action_ctrl Y
+	chown system system /sys/module/oneplus_healthinfo
+	chown system system /sys/module/oneplus_healthinfo/parameters
+	chown system system /sys/module/oneplus_healthinfo/parameters/ohm_iowait_h_ms
+	chown system system /sys/module/oneplus_healthinfo/parameters/ohm_iowait_l_ms
+	chown system system /sys/module/oneplus_healthinfo/parameters/ohm_read_thresh
+	chown system system /sys/module/oneplus_healthinfo/parameters/ohm_write_thresh
+	chown system system /sys/module/oneplus_healthinfo/parameters/ohm_sample_time
+	chown system system /sys/module/oneplus_healthinfo/parameters/ohm_action_ctrl
+	chown system system /proc/iolimit_enable
 
 #huangwen.chen#OPTI, 2020/9/16, [OPTI-43], add for zram writeback
 on property:persist.vendor.oem.dump=0
@@ -1183,10 +1058,3 @@ on property:persist.vendor.oem.dump=0
 
 on property:persist.vendor.oem.dump=1
     setprop persist.vendor.zwriteback.backup 1
-
-#ifdef ODM_WT_EDIT Kai.Cao@ODM_WT.NW.SIM,BILLIE8-6704, 2020/07/13,Support single and dual card solutions
-on property:ro.boot.rf_version=0 && property:ro.boot.project_codename=billie8
-    setprop persist.radio.multisim.config "ssss"
-on property:ro.boot.rf_version=0 && property:ro.boot.project_codename=billie8t
-    setprop persist.radio.multisim.config "ssss"
-#endif
