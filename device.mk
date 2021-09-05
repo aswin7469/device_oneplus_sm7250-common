@@ -204,9 +204,7 @@ PRODUCT_PACKAGES += \
     init.class_main.sh \
     init.cust.rc \
     init.oem.debug.rc \
-    init.oem.minidump.sdx55m.rc \
     init.oem.rc \
-    init.oem.sec.rc \
     init.oem_ftm.rc \
     init.opcamera.rc \
     init.oplus_chg.sh \
