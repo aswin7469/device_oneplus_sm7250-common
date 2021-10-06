@@ -26,4 +26,5 @@
     <!-- Preferred refresh rate at keyguard, if supported by the display -->
     <integer name="config_keyguardRefreshRate">60</integer>
 
+    <integer name="config_udfpsEnrollProgressBar" translatable="false">109</integer>
 </resources>
