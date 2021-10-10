@@ -25,8 +25,8 @@
     -->
     <integer name="config_fingerprintSensorLocation">4</integer>
 
-    <!-- Whether device supports refresh rate switch -->
-    <bool name="config_supportsRefreshRateSwitch">true</bool>
+    <!-- Whether to show Smooth Display feature in Settings Options -->
+    <bool name="config_show_smooth_display">true</bool>
 
     <!-- Device specific doze package -->
     <string name="config_customDozePackage">org.lineageos.settings.doze/org.lineageos.settings.doze.DozeSettingsActivity</string>
